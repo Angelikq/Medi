@@ -1,0 +1,58 @@
+# --- 🔹 OGÓLNE ---
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# --- 🔹 BACKEND (.NET API) ---
+# Bin i obj (pliki kompilacji)
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+
+# Konfiguracja użytkownika Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Paczki NuGet
+packages/
+*.nupkg
+project.lock.json
+
+# Secret keys & konfiguracje
+appsettings*.json
+secrets.json
+
+# --- 🔹 FRONTEND (React) ---
+# Node.js dependencies
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Build folder
+/build
+/.next
+/dist
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# Cache i logi
+.cache
+.npm
+.npmrc
+*.tsbuildinfo
+
+# --- 🔹 SYSTEMOWE ---
+.idea/
+.vscode/
+
