@@ -53,6 +53,7 @@ export default defineConfig({
             }
         },
         port: 52473,
+        //problem z certyfikatem z vite w dockerze
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),

@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medi.Server", "Medi.Server\Medi.Server.csproj", "{AD263EBA-A6E9-46CA-AE1E-B0229FC890D5}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "medi.client", "medi.client\medi.client.esproj", "{5B937C3D-DF67-4329-97FB-4A77D04FC3BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{419889AA-7C22-412E-A6D4-D9B91D76D0C0}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
