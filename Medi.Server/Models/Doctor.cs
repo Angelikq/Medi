@@ -1,11 +1,25 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
 namespace Medi.Server.Models
 {
     public class Doctor
     {
+        [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        public int? SpecializationId { get; set; }
+        public int? MedicalFacilityId { get; set; }
         public string Email { get; set; }
-        public string Role { get; set; }
+        public string Phone { get; set; }
+
+        [ForeignKey("SpecializationId")]
+        public Specialization Specialization { get; set; }
+        [ForeignKey("MedicalFacilityId")]
+        public MedicalFacility MedicalFacility { get; set; }
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }
