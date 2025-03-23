@@ -1,4 +1,5 @@
 using Bogus;
+using Bogus.DataSets;
 using Medi.Server.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,13 +19,11 @@ namespace Medi.Server.Data
                 var users = new[]
                 {
                     new User {
-                        Name = "Jan Kowalski",
                         Email = "jan.kowalski@example.com",
                         PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
                         Role = "Admin"
                     },
                     new User {
-                        Name = "Anna Nowak",
                         Email = "anna.nowak@example.com",
                         PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
                         Role = "Admin"
@@ -37,8 +36,10 @@ namespace Medi.Server.Data
 
             if (!context.Patients.Any())
             {
+                var users = context.Users.ToList();
 
                 var patients = new Faker<Patient>("pl")
+                    .RuleFor(p => p.User, f => f.PickRandom(users))
                     .RuleFor(p => p.FirstName, f => f.Name.FirstName())
                     .RuleFor(p => p.LastName, f => f.Name.LastName())
                     .RuleFor(p => p.DateOfBirth, f => f.Date.Past(50, DateTime.Now.AddYears(-18)))
@@ -50,33 +51,68 @@ namespace Medi.Server.Data
                 context.SaveChanges();
             }
 
-            if (!context.Cities.Any())
+            if (!context.Address.Any())
             {
                 var cities = new[]
                 {
-                    new City { Name = "Warsaw" },
-                    new City { Name = "Krakow" },
-                    new City { Name = "Wroclaw" },
-                    new City { Name = "Gdansk" },
-                    new City { Name = "Poznan" }
+                    new City { Name = "Legnica" }
                 };
 
                 context.Cities.AddRange(cities);
                 context.SaveChanges();
+            
+                var streetPrefixes = new[]
+                {
+                    new StreetPrefix{ Name = "ul."},
+                    new StreetPrefix{ Name = "al."},
+                    new StreetPrefix{ Name = "os."},
+                    new StreetPrefix{ Name = "plac"}
+                };
+
+                context.StreetPrefixes.AddRange(streetPrefixes);
+                context.SaveChanges();
+
+                var postalCodes = new Faker<PostalCode>("pl")
+                    .RuleFor(a => a.Name, f => f.Address.ZipCode())
+                    .Generate(3);
+
+                var streets = new Faker<Street>("pl")
+                    .RuleFor(p => p.Name, f => f.Address.StreetName())
+                    .Generate(20);
+
+
+                context.Streets.AddRange(streets);
+                context.SaveChanges();
+
+
+                var addresses = new Faker<Models.Address>("pl")
+                    .RuleFor(a => a.City, f => f.PickRandom(cities))
+                    .RuleFor(a => a.StreetPrefix, f => f.PickRandom(streetPrefixes))
+                    .RuleFor(a => a.Street, f => f.PickRandom(streets))
+                    .RuleFor(a => a.BuildingNumber, f => f.Address.BuildingNumber())
+                    .RuleFor(a => a.ApartamentNumber, f => f.Address.BuildingNumber())
+                    .RuleFor(a => a.PostalCode, f => f.PickRandom(postalCodes))
+                    .Generate(50);
+
+                context.Address.AddRange(addresses);
+                context.SaveChanges();
             }
 
-            if (!context.medicalFacilities.Any())
+            if (!context.MedicalFacilities.Any())
             {
                 var cities = context.Cities.ToList();
+                var address = context.Address.ToList();
+                var users = context.Users.ToList();
+
 
                 var medicalFacilityFaker = new Faker<MedicalFacility>()
+                    .RuleFor(p => p.User, f => f.PickRandom(users))
                     .RuleFor(m => m.Name, f => f.Company.CompanyName())
-                    .RuleFor(m => m.City.Id, f => f.PickRandom(cities).Id)
-                    .RuleFor(m => m.Address, f => f.Address.StreetAddress())
+                    .RuleFor(m => m.Address, f => f.PickRandom(address))
                     .RuleFor(m => m.Phone, f => f.Phone.PhoneNumber())
                     .Generate(5);
 
-                context.medicalFacilities.AddRange(medicalFacilityFaker);
+                context.MedicalFacilities.AddRange(medicalFacilityFaker);
                 context.SaveChanges();
             }
 
@@ -92,7 +128,7 @@ namespace Medi.Server.Data
                 context.Specializations.AddRange(specializations);
                 context.SaveChanges();
 
-                var medicalFacilities = context.medicalFacilities.ToList();
+                var medicalFacilities = context.MedicalFacilities.ToList();
 
                 var doctorFaker = new Faker<Doctor>("pl")
                     .RuleFor(d => d.FirstName, f => f.Name.FirstName())
@@ -113,8 +149,8 @@ namespace Medi.Server.Data
                 var doctors = context.Doctors.ToList();
 
                 var appointments = new Faker<Appointment>("pl")
-                    .RuleFor(a => a.PatientId, f => f.PickRandom(patients).Id)
-                    .RuleFor(a => a.DoctorId, f => f.PickRandom(doctors).Id)
+                    .RuleFor(a => a.Patient, f => f.PickRandom(patients))
+                    .RuleFor(a => a.Doctor, f => f.PickRandom(doctors))
                     .RuleFor(a => a.AppointmentDate, f => f.Date.Future(1))
                     .RuleFor(a => a.Notes, f => f.Lorem.Sentence())
                     .Generate(50);
@@ -123,19 +159,6 @@ namespace Medi.Server.Data
                 context.SaveChanges();
             }
 
-            if (!context.Prescriptions.Any())
-            {
-                var appointments = context.Appointments.ToList();
-
-                var prescriptions = new Faker<Prescription>("pl")
-                    .RuleFor(pr => pr.AppointmentId, f => f.PickRandom(appointments).Id)
-                    .RuleFor(pr => pr.Medications, f => f.Lorem.Words(3).Aggregate((a, b) => a + ", " + b))
-                    .RuleFor(pr => pr.Dosage, f => f.Random.Number(1, 3) + " razy dziennie")
-                    .Generate(30);
-
-                context.Prescriptions.AddRange(prescriptions);
-                context.SaveChanges();
-            }
         }
     }
 }

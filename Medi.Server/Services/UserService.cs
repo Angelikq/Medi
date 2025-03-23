@@ -21,7 +21,6 @@ namespace Medi.Server.Services
 
             var user = new User
             {
-                Name = model.Name,
                 Email = model.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password),
                 Role = "Pacjent"
