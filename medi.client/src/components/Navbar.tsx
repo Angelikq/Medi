@@ -1,30 +1,52 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import logo from '../assets/logo.png';
+import '../styles/Navbar.css';
 
-const Navbar: React.FC = () => {
-    return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div className="container">
-                <Link className="navbar-brand" to="/">NFZ Appointments</Link>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/login">Logowanie</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/login">Logowanie</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/login">Logowanie</Link>
-                        </li>
-                    </ul>
-                </div>
+const Navbar: React.FC = () => (
+    <nav className="navbar navbar-expand-lg bg-white px-2">
+        <div className="container-fluid">
+            <Link className="navbar-brand d-flex align-items-center" to="/">
+                <img src={logo} alt="Logo" height={80} className="me-3" />
+                <span className="fw-semibold fs-4 text-dark ms-2">Medica</span>
+            </Link>
+            <button
+                className="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent"
+                aria-controls="navbarContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <ul className="navbar-nav gap-3">
+                    <li className="nav-item">
+                        <Link className="nav-link text-dark fw-medium" to="/register">
+                            Zarejestruj się
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link text-dark fw-medium" to="/login">
+                            Zaloguj się
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link text-dark fw-medium" to="/profil-pacjenta">
+                            Profil pacjenta
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link text-dark fw-medium" to="/visits">
+                            Moje wizyty
+                        </Link>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    );
-};
+        </div>
+    </nav>
+);
 
 export default Navbar;

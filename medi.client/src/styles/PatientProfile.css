@@ -1,0 +1,102 @@
+body {
+    margin: 0;
+    background-color: white;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.patient-profile-wrapper {
+    background-color: white;
+}
+
+.section-title {
+    font-size: 20px;
+    color: #4b4b4b;
+    font-weight: 500;
+}
+
+.profile-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.profile-inner {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.avatar-wrapper {
+    background-color: #FAF7F1;
+    border-radius: 50%;
+    padding: 20px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.avatar-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.edit-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: white;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.2s ease;
+}
+
+    .edit-icon:hover {
+        background-color: #f0f0f0;
+    }
+
+.text-wrapper {
+    margin-left: 30px;
+}
+
+.profile-button {
+    background-color: #F6FBF9;
+    padding: 30px 28px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    font-size: 20px;
+    font-weight: 400;
+    color: #000000;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    max-width: 800px;
+}
+
+    .profile-button:hover {
+        background-color: #eef7f4;
+    }
+
+.button-icon {
+    width: 39px;
+    height: 39px;
+}
+
+.arrow {
+    font-size: 22px;
+    color: #555;
+}
+
+.d-flex {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}

@@ -28,6 +28,7 @@ namespace Medi.Server.Data
 
             context.Users.AddRange(users);
             context.SaveChanges();
+
         }
     }
 }

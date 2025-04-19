@@ -10,36 +10,40 @@ const LoginForm: React.FC = () => {
     };
 
     return (
-
-        <div className="card p-4 shadow" style={{ width: "22rem" }}>
-            <h2 className="text-center mb-3">Logowanie</h2>
-            <form onSubmit={handleSubmit}>
+        <div className="login-card">
+            <h2 className="form-heading">Zaloguj się na swoje konto</h2>
+            <p className="form-subtitle">Miło Cię znowu widzieć!</p>
+            <form onSubmit={handleSubmit} className="w-100">
                 <div className="mb-3">
-                    <label className="form-label">Email</label>
                     <input
                         type="email"
                         className="form-control"
-                        placeholder="Wprowadź email"
+                        placeholder="Adres e‑mail"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
 
                 <div className="mb-3">
-                    <label className="form-label">Hasło</label>
                     <input
                         type="password"
                         className="form-control"
-                        placeholder="Wprowadź hasło"
+                        placeholder="Hasło"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
 
-                <button type="submit" className="btn btn-primary w-100">
+                <button type="submit" className="login-btn">
                     Zaloguj się
                 </button>
             </form>
+
+            <div className="text-center mt-3 login-link">
+                <p>
+                    Nie masz konta? <a href="/register">Zarejestruj się</a>
+                </p>
+            </div>
         </div>
     );
 };

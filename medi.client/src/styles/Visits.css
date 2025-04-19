@@ -1,0 +1,236 @@
+.visits-container {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #fff;
+    padding: 3rem;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.form-section {
+    flex: 1;
+    max-width: 550px;
+    margin-left: 7.5rem;
+    margin-top: 1rem;
+}
+
+    .form-section h2 {
+        font-size: 1.8rem;
+        color: #212B27;
+        margin-bottom: 2rem;
+    }
+
+.search-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.date-input {
+    width: 50%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.date-label {
+    font-size: 1.2rem;
+    color: #212B27;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.specializations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.spec-button {
+    background-color: #D7F0F3;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 500;
+    color: #32403B;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+}
+
+    .spec-button.selected {
+        background-color: #59878C;
+        color: white;
+    }
+
+    .spec-button:hover {
+        background-color: #b6e3e9;
+    }
+
+.show-doctors {
+    background-color: #59878C;
+    color: white;
+    font-weight: 600;
+    padding: 0.8rem 1.6rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+    .show-doctors:hover {
+        background-color: #4d7478;
+    }
+
+.image-section {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding-top: 1rem;
+}
+
+    .image-section img {
+        max-width: 55%;
+        height: auto;
+        margin-right: 3rem;
+        margin-top: -5rem;
+    }
+
+.visits-list {
+    margin-top: 15rem;
+    margin-bottom: 10rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 7.5rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.visit-box {
+    background-color: #E7EFF0;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.visit-date {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #32403B;
+    margin-bottom: 0.5rem;
+}
+
+.doctor-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212B27;
+    margin-top: 1rem;
+}
+
+.specialty {
+    font-size: 1rem;
+    color: #32403B;
+    margin-top: 0.25rem;
+}
+
+.clinic-location-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.clinic {
+    font-size: 0.95rem;
+    color: #444;
+    margin: 0;
+}
+
+.location {
+    font-size: 0.95rem;
+    color: #444;
+    margin: 0;
+}
+
+.book-button {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background-color: #59878C;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .book-button:hover {
+        background-color: #4d7478;
+    }
+
+.man-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding-top: 1rem;
+}
+
+    .man-image img {
+        max-width: 37.5%;
+        height: auto;
+        margin-right: 1rem;
+        margin-top: -45rem;
+    }
+
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-section {
+        max-width: 100%;
+        margin-left: 0;
+    }
+
+    .specializations-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .image-section img {
+        max-width: 70%;
+    }
+
+    .man-image img {
+        max-width: 70%;
+    }
+
+    .visits-list {
+        padding-left: 0;
+        align-items: center;
+    }
+}
