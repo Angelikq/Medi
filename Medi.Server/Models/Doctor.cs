@@ -16,9 +16,7 @@ namespace Medi.Server.Models
         public string Email { get; set; }
         public string Phone { get; set; }
 
-        [ForeignKey("SpecializationId")]
         public Specialization Specialization { get; set; }
-        [ForeignKey("MedicalFacilityId")]
         public MedicalFacility MedicalFacility { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
     }

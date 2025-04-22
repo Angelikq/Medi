@@ -18,7 +18,9 @@ public class UsersController : ControllerBase
     public IActionResult Register([FromBody] AuthRequest model)
     {
         var result = _userService.Register(model);
-        if (!result) return BadRequest("Rejestracja nie powiodła się. Użytkownik może już istnieć.");
+        if (!result) { 
+            return BadRequest("Rejestracja nie powiodła się."); 
+        }
         return Ok(new { message = "Rejestracja zakończona sukcesem" });
     }
 

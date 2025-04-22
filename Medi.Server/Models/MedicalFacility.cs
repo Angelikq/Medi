@@ -8,13 +8,11 @@ namespace Medi.Server.Models
         [Key]
         public int Id { get; set; }
         [Required]
+        public User User { get; set; }
+        [Required]
         public string Name { get; set; }
-        public int CityId { get; set; }
-        public string Address { get; set; }
         public string Phone { get; set; }
-
-        [ForeignKey("CityId")]
-        public City City { get; set; }
+        public Address Address { get; set; }
         public ICollection<Doctor> Doctors { get; set; }
     }
 }

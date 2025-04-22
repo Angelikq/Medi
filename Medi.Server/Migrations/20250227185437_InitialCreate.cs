@@ -14,7 +14,7 @@ namespace Medi.Server.Migrations
             migrationBuilder.AlterDatabase()
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            /*           migrationBuilder.CreateTable(
+                      migrationBuilder.CreateTable(
                            name: "Users",
                            columns: table => new
                            {
@@ -34,7 +34,7 @@ namespace Medi.Server.Migrations
                                table.PrimaryKey("PK_Users", x => x.Id);
                            })
                            .Annotation("MySql:CharSet", "utf8mb4");
-                */
+                
         }
 
         /// <inheritdoc />
