@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../styles/Visits.css';
 import doctorImg from '../assets/doctor.png';
 import manImg from '../assets/man.png';
+import Button from '../components/Button';
 
 const Visits: React.FC = () => {
     const [selectedSpecialists, setSelectedSpecialists] = useState<string[]>([]);
