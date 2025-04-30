@@ -1,13 +1,12 @@
 import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import doctorImage from '../assets/homepage.png';
 import '../styles/App.css';
-import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => (
-    <Container className="py-5">
-        <Row className="align-items-center flex-column-reverse flex-md-row">
-            <Col md={6} className="mb-4 text-section px-3 px-lg-5">
+    <div className="container py-5">
+        <div className="row align-items-center flex-column-reverse flex-md-row">
+            <div className="col-md-6 mb-4 text-section px-3 px-lg-5">
                 <h1 className="fw-medium">
                     Umów wizytę do specjalisty na NFZ w Legnicy – szybko i bez kolejek
                 </h1>
@@ -16,22 +15,22 @@ const Home: React.FC = () => (
                 </p>
                 <div className="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start">
                     <Link to="/register">
-                        <Button size="lg" className="rounded-pill mb-2 me-md-3">
+                        <button type="button" className="btn lg rounded-pill mb-2 me-md-3 mb-2">
                             ZAREZERWUJ WIZYTĘ
-                        </Button>
+                        </button>
                     </Link>
                     <Link to="/login">
-                        <Button variant="outline-primary" size="lg" className="rounded-pill mb-2">
+                        <button type ="button" className="btn lg btn-outline-primary rounded-pill mb-2">
                             KONTAKT
-                        </Button>
+                        </button>
                     </Link>
                 </div>
-            </Col>
-            <Col md={6} className="text-center">
+            </div>
+            <div className="col-md-6 text-center">
                 <img src={doctorImage} alt="Lekarze" className="img-fluid custom-img" />
-            </Col>
-        </Row>
-    </Container>
+            </div>
+        </div>
+    </div>
 );
 
 export default Home;
