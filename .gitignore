@@ -51,6 +51,7 @@ package-lock.json
 .npm
 .npmrc
 *.tsbuildinfo
+Logs/
 
 # --- 🔹 SYSTEMOWE ---
 .idea/

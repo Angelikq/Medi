@@ -3,14 +3,10 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/index.css';
-import './styles/Navbar.css';
-import './styles/App.css';
-import './styles/Login.css';
-import './styles/Register.css';
-import './styles/Visits.css';
+
 
 import Navbar from './components/Navbar';
-import Home from './pages/App';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Visits from './pages/Visits';
