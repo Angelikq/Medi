@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import '../styles/Login.css';
 import witaImage from '../assets/woman.png';
 
 const Login: React.FC = () => {
