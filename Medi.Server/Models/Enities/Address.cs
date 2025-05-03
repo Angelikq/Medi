@@ -16,7 +16,7 @@ namespace Medi.Server.Models.Enities
         public City City { get; set; }
         [Required]
         public string BuildingNumber { get; set; }
-        public string? ApartamentNumber { get; set; }
+        public string? ApartmentNumber { get; set; }
         public PostalCode PostalCode { get; set; }
     }
 }

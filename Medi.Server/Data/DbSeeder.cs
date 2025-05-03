@@ -4,6 +4,7 @@ using Bogus;
 using Bogus.DataSets;
 using CsvHelper;
 using Medi.Server.Models;
+using Medi.Server.Models.DTOs;
 using Medi.Server.Models.Enities;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,63 +56,59 @@ namespace Medi.Server.Data
                 context.SaveChanges();
             }
 
-            if (!context.Address.Any())
-            {
-                var cities = new[]
-                {
-                    new City { Name = "Legnica" }
-                };
-
-                context.Cities.AddRange(cities);
-                context.SaveChanges();
-            
-                var streetPrefixes = new[]
-                {
-                    new StreetPrefix{ Name = "ul."},
-                    new StreetPrefix{ Name = "al."},
-                    new StreetPrefix{ Name = "os."},
-                    new StreetPrefix{ Name = "plac"}
-                };
-
-                context.StreetPrefixes.AddRange(streetPrefixes);
-                context.SaveChanges();
-
-                var postalCodes = new Faker<PostalCode>("pl")
-                    .RuleFor(a => a.Name, f => f.Address.ZipCode())
-                    .Generate(3);
-
-                var streets = new Faker<Street>("pl")
-                    .RuleFor(p => p.Name, f => f.Address.StreetName())
-                    .Generate(20);
-
-
-                context.Streets.AddRange(streets);
-                context.SaveChanges();
-
-
-                var addresses = new Faker<Models.Enities.Address>("pl")
-                    .RuleFor(a => a.City, f => f.PickRandom(cities))
-                    .RuleFor(a => a.StreetPrefix, f => f.PickRandom(streetPrefixes))
-                    .RuleFor(a => a.Street, f => f.PickRandom(streets))
-                    .RuleFor(a => a.BuildingNumber, f => f.Address.BuildingNumber())
-                    .RuleFor(a => a.ApartamentNumber, f => f.Address.BuildingNumber())
-                    .RuleFor(a => a.PostalCode, f => f.PickRandom(postalCodes))
-                    .Generate(50);
-
-                context.Address.AddRange(addresses);
-                context.SaveChanges();
-            }
-
             if (!context.MedicalFacilities.Any())
             {
+                var cityCache = new Dictionary<string, City>();
+                var streetCache = new Dictionary<string, Street>();
+                var prefixCache = new Dictionary<string, StreetPrefix>();
+                var postalCache = new Dictionary<string, PostalCode>();
+
                 using var reader = new StreamReader("Data/clinics-data.csv", Encoding.UTF8);
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
                 csv.Context.RegisterClassMap<MedicalFacilityMap>();
 
-                var medicalFacilities = csv.GetRecords<MedicalFacility>().ToList();
+                var records = csv.GetRecords<MedicalFacilityDTO>().ToList();
+                var facilities = new List<MedicalFacility>();
 
-                context.MedicalFacilities.AddRange(medicalFacilities);
+                foreach (var r in records)
+                {
+                    var city = cityCache.TryGetValue(r.City, out var c) ? c :
+                        context.Cities.FirstOrDefault(x => x.Name == r.City) ?? new City { Name = r.City };
+
+                    cityCache[r.City] = city;
+
+                    var street = streetCache.TryGetValue(r.Street, out var s) ? s :
+                        context.Streets.FirstOrDefault(x => x.Name == r.Street) ?? new Street { Name = r.Street };
+
+                    streetCache[r.Street] = street;
+
+                    var prefix = prefixCache.TryGetValue(r.StreetPrefix, out var p) ? p :
+                        context.StreetPrefixes.FirstOrDefault(x => x.Name == r.StreetPrefix) ?? new StreetPrefix { Name = r.StreetPrefix };
+
+                    prefixCache[r.StreetPrefix] = prefix;
+
+                    var postal = postalCache.TryGetValue(r.PostalCode, out var pc) ? pc :
+                        context.PostalCode.FirstOrDefault(x => x.Name == r.PostalCode) ?? new PostalCode { Name = r.PostalCode };
+
+                    postalCache[r.PostalCode] = postal;
+
+                    facilities.Add(new MedicalFacility
+                    {
+                        Name = r.Name,
+                        Phone = r.Phone,
+                        Address = new Models.Enities.Address
+                        {
+                            City = city,
+                            Street = street,
+                            StreetPrefix = prefix,
+                            PostalCode = postal,
+                            BuildingNumber = r.BuildingNumber,
+                            ApartmentNumber = r.ApartmentNumber,
+                        }
+                    });
+                }
+
+                context.MedicalFacilities.AddRange(facilities);
                 context.SaveChanges();
             }
             if (!context.Doctors.Any())
