@@ -1,6 +1,6 @@
-using Medi.Server.Models;
 using Medi.Server.Data;
 using Microsoft.EntityFrameworkCore;
+using Medi.Server.Models.Enities;
 
 namespace Medi.Server.Services
 {

@@ -1,4 +1,4 @@
-using Medi.Server.Models;
+using Medi.Server.Models.Enities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Medi.Server.Data

@@ -1,4 +1,3 @@
-using Medi.Server.Models;
 using Medi.Server.Data;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity.Data;
@@ -7,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Medi.Server.Models.Enities;
+using Medi.Server.Models.DTOs;
 
 namespace Medi.Server.Services
 {

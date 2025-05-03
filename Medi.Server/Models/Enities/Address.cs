@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Text.Json.Serialization;
 
-namespace Medi.Server.Models
+namespace Medi.Server.Models.Enities
 {
     public class Address
     {
@@ -16,7 +16,7 @@ namespace Medi.Server.Models
         public City City { get; set; }
         [Required]
         public string BuildingNumber { get; set; }
-        public string ApartamentNumber { get; set; }
+        public string? ApartamentNumber { get; set; }
         public PostalCode PostalCode { get; set; }
     }
 }

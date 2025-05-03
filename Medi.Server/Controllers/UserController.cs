@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Medi.Server.Services;
-using Medi.Server.Models;
 
 using Microsoft.AspNetCore.Identity.Data;
+using Medi.Server.Models.DTOs;
 
 [Route("api/users")]
 [ApiController]

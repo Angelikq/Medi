@@ -1,6 +1,10 @@
+using System.Globalization;
+using System.Text;
 using Bogus;
 using Bogus.DataSets;
+using CsvHelper;
 using Medi.Server.Models;
+using Medi.Server.Models.Enities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Medi.Server.Data
@@ -85,7 +89,7 @@ namespace Medi.Server.Data
                 context.SaveChanges();
 
 
-                var addresses = new Faker<Models.Address>("pl")
+                var addresses = new Faker<Models.Enities.Address>("pl")
                     .RuleFor(a => a.City, f => f.PickRandom(cities))
                     .RuleFor(a => a.StreetPrefix, f => f.PickRandom(streetPrefixes))
                     .RuleFor(a => a.Street, f => f.PickRandom(streets))
@@ -100,22 +104,16 @@ namespace Medi.Server.Data
 
             if (!context.MedicalFacilities.Any())
             {
-                var cities = context.Cities.ToList();
-                var address = context.Address.ToList();
-                var users = context.Users.ToList();
+                using var reader = new StreamReader("Data/clinics-data.csv", Encoding.UTF8);
+                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
+                csv.Context.RegisterClassMap<MedicalFacilityMap>();
 
-                var medicalFacilityFaker = new Faker<MedicalFacility>()
-                    .RuleFor(p => p.User, f => f.PickRandom(users))
-                    .RuleFor(m => m.Name, f => f.Company.CompanyName())
-                    .RuleFor(m => m.Address, f => f.PickRandom(address))
-                    .RuleFor(m => m.Phone, f => f.Phone.PhoneNumber())
-                    .Generate(5);
+                var medicalFacilities = csv.GetRecords<MedicalFacility>().ToList();
 
-                context.MedicalFacilities.AddRange(medicalFacilityFaker);
+                context.MedicalFacilities.AddRange(medicalFacilities);
                 context.SaveChanges();
             }
-
             if (!context.Doctors.Any())
             {
                 var specializations = new[]

@@ -1,4 +1,4 @@
-namespace Medi.Server.Models
+namespace Medi.Server.Models.DTOs
 {
     public class AuthRequest
     {
