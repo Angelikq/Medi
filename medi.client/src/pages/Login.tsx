@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import witaImage from '../assets/woman.png';
 import AlertMessage from '../components/AlertMessage';
+import { useNavigate } from 'react-router-dom';
+
 
 interface FormData {
     email: string;
@@ -31,6 +33,7 @@ const Login: React.FC = () => {
         setErrors(newErrors);
         return valid;
     };
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,7 +46,7 @@ const Login: React.FC = () => {
         if (!validate(formData)) return;
 
         try {
-            const response = await fetch('https://localhost:7061/api/users/login', {
+            const response= await fetch('https://localhost:7061/api/users/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -55,8 +58,12 @@ const Login: React.FC = () => {
                 setMessage({ type: 'error', text: msg });
                 return;
             }
+            const result = await response.json();
 
+            localStorage.setItem('token', result.token);
             setMessage({ type: 'success', text: 'Zalogowano pomyślnie!' });
+            navigate('/visits'); 
+
         } catch {
             setMessage({ type: 'error', text: 'Nie udało się połączyć z serwerem. Sprawdź połączenie z internetem.' });
         }

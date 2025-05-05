@@ -68,7 +68,12 @@ public class UsersController : ControllerBase
             }
 
             _logger.LogInformation("User logged in successfully with email: {Email}", model.Email);
-            return Ok(new { message = result.Message });
+            return Ok(new
+            {
+                message = result.Message,
+                token = result.Data?.Token
+            });
+
         }
         catch (Exception ex)
         {

@@ -11,18 +11,22 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Visits from './pages/Visits';
 import PatientProfile from './pages/PatientProfile'; 
+import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './components/AuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <BrowserRouter>
-            <Navbar />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/visits" element={<Visits />} />
-                <Route path="/profil-pacjenta" element={<PatientProfile />} /> 
-            </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+            <BrowserRouter>
+                <Navbar />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/visits" element={<ProtectedRoute><Visits /></ProtectedRoute>} />
+                    <Route path="/profil-pacjenta" element={<ProtectedRoute><PatientProfile /></ProtectedRoute>} /> 
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
     </React.StrictMode>
 );
