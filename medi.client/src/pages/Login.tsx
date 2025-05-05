@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import witaImage from '../assets/woman.png';
 import AlertMessage from '../components/AlertMessage';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext';
 
 
 interface FormData {
@@ -10,6 +11,8 @@ interface FormData {
 }
 
 const Login: React.FC = () => {
+    const { setIsAuthenticated } = useAuth();
+
     const [errors, setErrors] = useState({
         email: '',
         password: ''
@@ -61,6 +64,7 @@ const Login: React.FC = () => {
             const result = await response.json();
 
             localStorage.setItem('token', result.token);
+            setIsAuthenticated(true);
             setMessage({ type: 'success', text: 'Zalogowano pomyślnie!' });
             navigate('/visits'); 
 
