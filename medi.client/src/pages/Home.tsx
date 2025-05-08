@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import doctorImage from '../assets/homepage.png';
 import '../styles/App.css';
+import Calendar from '../components/Calendar';
 
 const Home: React.FC = () => (
     <div className="container py-5">
@@ -30,6 +31,7 @@ const Home: React.FC = () => (
                 <img src={doctorImage} alt="Lekarze" className="img-fluid custom-img" />
             </div>
         </div>
+        <Calendar />
     </div>
 );
 

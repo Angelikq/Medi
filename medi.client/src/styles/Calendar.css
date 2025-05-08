@@ -1,0 +1,10 @@
+.calendar{
+    max-width: 520px;
+}
+.custom-small-font {
+    font-size: 10px; 
+}
+tbody, td, tfoot, th, thead, tr {
+    border: none;
+    border-right: 1px solid #0000000f;
+}
