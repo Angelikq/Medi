@@ -1,9 +1,7 @@
 using System.Globalization;
 using System.Text;
 using Bogus;
-using Bogus.DataSets;
 using CsvHelper;
-using Medi.Server.Models;
 using Medi.Server.Models.DTOs;
 using Medi.Server.Models.Enities;
 using Microsoft.EntityFrameworkCore;
@@ -113,12 +111,14 @@ namespace Medi.Server.Data
             }
             if (!context.Doctors.Any())
             {
-                var specializations = new[]
+                var specializationsNames = new[] { "Internista", "Pediatra", "Lekarz rodzinny", "Kardiolog", "Endokrynolog", "Neurolog", "Ortopeda", "Reumatolog", "Dermatolog", "Chirurg", "Ginekolog", "Urolog", "Laryngolog", "Okulista", "Psychiatra", "Stomatolog", "Onkolog", "Pulmonolog", "Alergolog", "Anestezjolog", "Hematolog", "Geriatra", "Medycyna pracy", "Chirurg plastyczny", "Chirurg naczyniowy" };
+                var specializations = new List<Specialization>();
+                foreach (var specializationName in specializationsNames)
                 {
-                    new Specialization { Name = "Kardiolog" },
-                    new Specialization { Name = "Neurolog" },
-                    new Specialization { Name = "Ortopeda" }
-                };
+
+                    specializations.Add(new Specialization { Name = specializationName });
+                    
+                }
 
                 context.Specializations.AddRange(specializations);
                 context.SaveChanges();
@@ -132,7 +132,7 @@ namespace Medi.Server.Data
                     .RuleFor(d => d.Phone, f => f.Phone.PhoneNumber())
                     .RuleFor(d => d.SpecializationId, f => f.PickRandom(specializations).Id)
                     .RuleFor(d => d.MedicalFacilityId, f => f.PickRandom(medicalFacilities).Id)
-                    .Generate(5);
+                    .Generate(120);
 
                 context.Doctors.AddRange(doctorFaker);
                 context.SaveChanges();
@@ -148,7 +148,7 @@ namespace Medi.Server.Data
                     .RuleFor(a => a.Doctor, f => f.PickRandom(doctors))
                     .RuleFor(a => a.AppointmentDate, f => f.Date.Future(1))
                     .RuleFor(a => a.Notes, f => f.Lorem.Sentence())
-                    .Generate(50);
+                    .Generate(150);
 
                 context.Appointments.AddRange(appointments);
                 context.SaveChanges();
