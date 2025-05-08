@@ -22,6 +22,8 @@ const getWeekDates = (startDate: Date) => {
 const Calendar: React.FC = () => {
     const [currentWeekStart, setCurrentWeekStart] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
+    const [expanded, setExpanded] = useState(false);
+
 
     const availableTimes = [
         '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -61,15 +63,16 @@ const Calendar: React.FC = () => {
         <div className="calendar container overflow-hidden border rounded p-4">
             <h3 className="mb-4" style={{ fontSize: '1.2rem' }}>Kalendarz dostępnych terminów</h3>
             <div className="d-flex justify-content-between mb-4">
-                <button className="btn btn-outline-secondary py-1 ps-2 pe-3 fs-6" onClick={handlePrevWeek}><FaCaretLeft className="me-1" />Poprzedni</button>
-                <h5 className="text-center" style={{ fontSize: '1rem' }}>
+                <button className="btn-primary btn-outline-secondary rounded-4 py-1 ps-2 pe-3 fs-6" onClick={handlePrevWeek}><FaCaretLeft className="me-1" />Poprzedni</button>
+                <h5 className="text-center mb-0" style={{ fontSize: '1rem' }}>
                     {weekDates[0].toLocaleDateString('pl-PL', { day: 'numeric', month: 'numeric' })}
                     {' - '}
                     {weekDates[6].toLocaleDateString('pl-PL', { day: 'numeric', month: 'numeric', year: 'numeric' })}
                 </h5>
-                <button className="btn btn-outline-secondary py-1 ps-3 pe-2 fs-6" onClick={handleNextWeek}>Następny<FaCaretRight className="ms-1" /></button>
+                <button className="btn-primary btn-outline-secondary rounded-4 py-1 ps-3 pe-2 fs-6" onClick={handleNextWeek}>Następny<FaCaretRight className="ms-1" /></button>
             </div>
-
+        <div className="position-relative overflow-hidden shadow-sm" >
+         <div className={`table-scroll-wrapper ${expanded ? 'expanded' : ''}`}>
             <div className="table-responsive">
                 <table className="table table-sm">
                     <thead>
@@ -108,7 +111,24 @@ const Calendar: React.FC = () => {
                     </tbody>
                 </table>
             </div>
+       
+          </div>
+          {!expanded && (
+            <div className="gradient-overlay position-absolute bottom-0 start-0 w-100" style={{ height: '80px', background: 'linear-gradient(to bottom, transparent, white)' }} />
+          )}
         </div>
+            <div className="text-center mt-3">
+                <button
+                    className="btn btn-link text-dark text-decoration-none fw-semibold"
+                    onClick={() => setExpanded(!expanded)}
+                    style={{ fontSize: '0.95rem' }}
+                >
+                    {expanded ? 'Ukryj ↑' : 'Pokaż więcej ↓'}
+                </button>
+            </div>
+
+
+         </div>
     );
 };
 

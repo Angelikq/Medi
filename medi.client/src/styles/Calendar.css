@@ -8,3 +8,13 @@ tbody, td, tfoot, th, thead, tr {
     border: none;
     border-right: 1px solid #0000000f;
 }
+
+.table-scroll-wrapper {
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+    max-height: 300px;
+}
+
+.table-scroll-wrapper.expanded {
+        max-height: none;
+    }
