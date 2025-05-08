@@ -36,7 +36,7 @@ body {
     transition: 0.3s ease;
 }
 
-    .btn:hover {
+    .btn-primary:hover {
         background-color: #4d7478;
         color: white;
     }
@@ -53,7 +53,7 @@ body {
         color: white;
     }
 
-    .btn:focus,
+    .btn-primary:focus,
     .btn-outline-primary:focus {
         outline: none;
         border-color: #86b7fe;
