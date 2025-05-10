@@ -6,7 +6,7 @@ namespace Medi.Server.Models.Enities
     {
         [Key]
         public int Id { get; set; }
-        public DateTime AppointmentDate { get; set; }
+        public AppointmentSlot AppointmentSlot { get; set; }
         public string Notes { get; set; }
         public Doctor Doctor { get; set; }
         public Patient Patient { get; set; }

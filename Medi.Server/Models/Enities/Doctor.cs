@@ -11,13 +11,14 @@ namespace Medi.Server.Models.Enities
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        public int? SpecializationId { get; set; }
-        public int? MedicalFacilityId { get; set; }
+        [Required]
         public string Email { get; set; }
         public string Phone { get; set; }
-
+        [Required]
         public Specialization Specialization { get; set; }
         public MedicalFacility MedicalFacility { get; set; }
+        public ICollection<WorkingHours> WorkingHours { get; set; }
+
         public ICollection<Appointment> Appointments { get; set; }
     }
 }

@@ -119,9 +119,18 @@ namespace Medi.Server.Data
                     specializations.Add(new Specialization { Name = specializationName });
                     
                 }
-
                 context.Specializations.AddRange(specializations);
                 context.SaveChanges();
+
+                var workingHoursFaker = new Faker<WorkingHours>("pl")
+                    .RuleFor(w => w.DayOfWeek, f => f.PickRandom<DayOfWeek>())
+                    .RuleFor(w => w.StartTime, f => new TimeSpan(f.Random.Int(6, 10), 0, 0))
+                    .RuleFor(w => w.EndTime, (f, w) => w.StartTime.Add(TimeSpan.FromHours(f.Random.Int(4, 8))))
+                    .Generate(7);
+
+                context.WorkingHours.AddRange(workingHoursFaker);
+                context.SaveChanges();
+
 
                 var medicalFacilities = context.MedicalFacilities.ToList();
 
@@ -130,25 +139,76 @@ namespace Medi.Server.Data
                     .RuleFor(d => d.LastName, f => f.Name.LastName())
                     .RuleFor(d => d.Email, f => f.Internet.Email())
                     .RuleFor(d => d.Phone, f => f.Phone.PhoneNumber())
-                    .RuleFor(d => d.SpecializationId, f => f.PickRandom(specializations).Id)
-                    .RuleFor(d => d.MedicalFacilityId, f => f.PickRandom(medicalFacilities).Id)
+                    .RuleFor(d => d.Specialization, f => f.PickRandom(specializations))
+                    .RuleFor(d => d.MedicalFacility, f => f.PickRandom(medicalFacilities))
+                    .RuleFor(d => d.WorkingHours, f => Enumerable.Range(1, f.Random.Int(3, 5))
+                        .Select(_ => f.PickRandom(workingHoursFaker))
+                        .GroupBy(w => w.DayOfWeek)
+                        .Select(g => g.First())
+                        .ToList())
                     .Generate(120);
 
                 context.Doctors.AddRange(doctorFaker);
+                context.SaveChanges();
+            }
+            if (!context.AppointmentSlots.Any())
+            {
+                ICollection<Doctor> doctors = context.Doctors.Include(d => d.WorkingHours).ToList();
+                var slots = new List<AppointmentSlot>();
+                var startDate = DateTime.Today;
+                var endDate = startDate.AddDays(14);
+
+                foreach (var doctor in doctors)
+                {
+                    for (var date = startDate; date <= endDate; date = date.AddDays(1))
+                    {
+                        var dayOfWeek = date.DayOfWeek;
+                        var hours = doctor.WorkingHours.FirstOrDefault(h => h.DayOfWeek == dayOfWeek);
+                        if (hours == null) continue;
+
+                        var currentTime = date.Date + hours.StartTime;
+                        var endTime = date.Date + hours.EndTime;
+                        while (currentTime + TimeSpan.FromMinutes(30) <= endTime)
+                        {
+                            slots.Add(new AppointmentSlot
+                            {
+                                Doctor = doctor,
+                                StartTime = currentTime,
+                                DurationInMinutes = 30,
+                            });
+
+                            currentTime = currentTime.AddMinutes(30);
+                        }
+                    }
+                }
+
+                context.AppointmentSlots.AddRange(slots);
                 context.SaveChanges();
             }
 
             if (!context.Appointments.Any())
             {
                 var patients = context.Patients.ToList();
-                var doctors = context.Doctors.ToList();
+                var freeSlots = context.AppointmentSlots
+                    .Include(s => s.Doctor)
+                    .ToList();
 
-                var appointments = new Faker<Appointment>("pl")
-                    .RuleFor(a => a.Patient, f => f.PickRandom(patients))
-                    .RuleFor(a => a.Doctor, f => f.PickRandom(doctors))
-                    .RuleFor(a => a.AppointmentDate, f => f.Date.Future(1))
-                    .RuleFor(a => a.Notes, f => f.Lorem.Sentence())
-                    .Generate(150);
+                var appointments = new List<Appointment>();
+
+                foreach (var slot in freeSlots.Take(150))
+                {
+                    var patient = new Faker().PickRandom(patients);
+
+                    var appointment = new Appointment
+                    {
+                        Patient = patient,
+                        Doctor = slot.Doctor,
+                        AppointmentSlot = slot,
+                        Notes = "Wizyta kontrolna"
+                    };
+
+                    appointments.Add(appointment);
+                }
 
                 context.Appointments.AddRange(appointments);
                 context.SaveChanges();
