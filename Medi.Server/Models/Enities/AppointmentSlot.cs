@@ -8,5 +8,6 @@ namespace Medi.Server.Models.Enities
         public DateTime StartTime { get; set; }
         public int DurationInMinutes { get; set; }
 
+        public Appointment Appointment { get; set; }
     }
 }

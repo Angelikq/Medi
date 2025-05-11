@@ -111,26 +111,10 @@ namespace Medi.Server.Data
             }
             if (!context.Doctors.Any())
             {
-                var specializationsNames = new[] { "Internista", "Pediatra", "Lekarz rodzinny", "Kardiolog", "Endokrynolog", "Neurolog", "Ortopeda", "Reumatolog", "Dermatolog", "Chirurg", "Ginekolog", "Urolog", "Laryngolog", "Okulista", "Psychiatra", "Stomatolog", "Onkolog", "Pulmonolog", "Alergolog", "Anestezjolog", "Hematolog", "Geriatra", "Medycyna pracy", "Chirurg plastyczny", "Chirurg naczyniowy" };
-                var specializations = new List<Specialization>();
-                foreach (var specializationName in specializationsNames)
-                {
-
-                    specializations.Add(new Specialization { Name = specializationName });
-                    
-                }
-                context.Specializations.AddRange(specializations);
+                var specializations = new[] { "Internista", "Pediatra", "Lekarz rodzinny", "Kardiolog", "Endokrynolog", "Neurolog", "Ortopeda", "Reumatolog", "Dermatolog", "Chirurg", "Ginekolog", "Urolog", "Laryngolog", "Okulista", "Psychiatra", "Stomatolog", "Onkolog", "Pulmonolog", "Alergolog", "Anestezjolog", "Hematolog", "Geriatra", "Medycyna pracy", "Chirurg plastyczny", "Chirurg naczyniowy" };
+                var specializationsList = specializations.Select(name => new Specialization { Name = name }).ToList();
+                context.Specializations.AddRange(specializationsList);
                 context.SaveChanges();
-
-                var workingHoursFaker = new Faker<WorkingHours>("pl")
-                    .RuleFor(w => w.DayOfWeek, f => f.PickRandom<DayOfWeek>())
-                    .RuleFor(w => w.StartTime, f => new TimeSpan(f.Random.Int(6, 10), 0, 0))
-                    .RuleFor(w => w.EndTime, (f, w) => w.StartTime.Add(TimeSpan.FromHours(f.Random.Int(4, 8))))
-                    .Generate(7);
-
-                context.WorkingHours.AddRange(workingHoursFaker);
-                context.SaveChanges();
-
 
                 var medicalFacilities = context.MedicalFacilities.ToList();
 
@@ -139,45 +123,58 @@ namespace Medi.Server.Data
                     .RuleFor(d => d.LastName, f => f.Name.LastName())
                     .RuleFor(d => d.Email, f => f.Internet.Email())
                     .RuleFor(d => d.Phone, f => f.Phone.PhoneNumber())
-                    .RuleFor(d => d.Specialization, f => f.PickRandom(specializations))
+                    .RuleFor(d => d.Specialization, f => f.PickRandom(specializationsList))
                     .RuleFor(d => d.MedicalFacility, f => f.PickRandom(medicalFacilities))
-                    .RuleFor(d => d.WorkingHours, f => Enumerable.Range(1, f.Random.Int(3, 5))
-                        .Select(_ => f.PickRandom(workingHoursFaker))
-                        .GroupBy(w => w.DayOfWeek)
-                        .Select(g => g.First())
-                        .ToList())
+                    .RuleFor(d => d.WorkingHours, f =>
+                    {
+                        var workingDaysCount = f.Random.Int(2, 6);
+
+                        var workingDays = f.PickRandom(Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().ToList(), workingDaysCount);
+
+                        return workingDays.Select(day => new WorkingHours
+                        {
+                            DayOfWeek = day,
+                            StartTime = new TimeSpan(f.Random.Int(6, 9), f.Random.Int(0, 60), 0),
+                            EndTime = new TimeSpan(f.Random.Int(12, 18), f.Random.Int(0, 60), 0)
+                        }).ToList();
+                    })
                     .Generate(120);
 
                 context.Doctors.AddRange(doctorFaker);
                 context.SaveChanges();
             }
+
             if (!context.AppointmentSlots.Any())
             {
-                ICollection<Doctor> doctors = context.Doctors.Include(d => d.WorkingHours).ToList();
+                var doctors = context.Doctors.Include(d => d.WorkingHours).ToList();
                 var slots = new List<AppointmentSlot>();
                 var startDate = DateTime.Today;
-                var endDate = startDate.AddDays(14);
+                var endDate = startDate.AddDays(28);
 
                 foreach (var doctor in doctors)
                 {
-                    for (var date = startDate; date <= endDate; date = date.AddDays(1))
+                    foreach (var workingHour in doctor.WorkingHours)
                     {
-                        var dayOfWeek = date.DayOfWeek;
-                        var hours = doctor.WorkingHours.FirstOrDefault(h => h.DayOfWeek == dayOfWeek);
-                        if (hours == null) continue;
-
-                        var currentTime = date.Date + hours.StartTime;
-                        var endTime = date.Date + hours.EndTime;
-                        while (currentTime + TimeSpan.FromMinutes(30) <= endTime)
+                        var currentDate = startDate;
+                        while (currentDate <= endDate)
                         {
-                            slots.Add(new AppointmentSlot
+                            if (currentDate.DayOfWeek == workingHour.DayOfWeek)
                             {
-                                Doctor = doctor,
-                                StartTime = currentTime,
-                                DurationInMinutes = 30,
-                            });
+                                var currentTime = currentDate.Date + workingHour.StartTime;
+                                var endTime = currentDate.Date + workingHour.EndTime;
 
-                            currentTime = currentTime.AddMinutes(30);
+                                while (currentTime + TimeSpan.FromMinutes(30) <= endTime)
+                                {
+                                    slots.Add(new AppointmentSlot
+                                    {
+                                        Doctor = doctor,
+                                        StartTime = currentTime,
+                                        DurationInMinutes = 30,
+                                    });
+                                    currentTime = currentTime.AddMinutes(30);
+                                }
+                            }
+                            currentDate = currentDate.AddDays(1);
                         }
                     }
                 }
@@ -189,9 +186,7 @@ namespace Medi.Server.Data
             if (!context.Appointments.Any())
             {
                 var patients = context.Patients.ToList();
-                var freeSlots = context.AppointmentSlots
-                    .Include(s => s.Doctor)
-                    .ToList();
+                var freeSlots = context.AppointmentSlots.Include(s => s.Doctor).ToList();
 
                 var appointments = new List<Appointment>();
 
@@ -206,14 +201,13 @@ namespace Medi.Server.Data
                         AppointmentSlot = slot,
                         Notes = "Wizyta kontrolna"
                     };
-
+                    slot.Appointment = appointment;
                     appointments.Add(appointment);
                 }
 
                 context.Appointments.AddRange(appointments);
                 context.SaveChanges();
             }
-
         }
     }
 }

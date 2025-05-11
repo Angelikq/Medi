@@ -1,9 +1,11 @@
 using System.Text;
 using Medi.Server.Data;
+using Medi.Server.Interfaces;
 using Medi.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MySqlConnector;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,6 +55,7 @@ builder.Services.AddControllers()
     });
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<MedicalFacilityService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -21,9 +21,6 @@ namespace Medi.Server.Data
         public DbSet<PostalCode> PostalCode { get; set; }
         public DbSet<WorkingHours> WorkingHours { get; set; }
         public DbSet<AppointmentSlot> AppointmentSlots { get; set; }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-        }
     }
+   
 }
