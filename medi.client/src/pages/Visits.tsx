@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../styles/Visits.css';
 import doctorImg from '../assets/doctor.png';
 import manImg from '../assets/man.png';
+import { AppointmentSlotDTO } from '../types/AppointmentSlotDTO';
 
 const Visits: React.FC = () => {
     const [selectedSpecialists, setSelectedSpecialists] = useState<string[]>([]);
-    const [selectedDate, setSelectedDate] = useState<string>('');
+  //  const [selectedDate, setSelectedDate] = useState<string>('');
+    const visitsListRef = useRef<HTMLDivElement>(null);
 
     const allSpecialists = [
         'Internista', 'Kardiolog', 'Dermatolog',
@@ -13,10 +15,69 @@ const Visits: React.FC = () => {
         'Urolog', 'Psycholog', 'Pediatra'
     ];
 
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    const dateInputRef = useRef<HTMLInputElement>(null);
+    const selectedSpecialistsRef = useRef<Set<string>>(new Set());
+
     const toggleSpecialist = (spec: string) => {
-        setSelectedSpecialists((prev) =>
-            prev.includes(spec) ? prev.filter((s) => s !== spec) : [...prev, spec]
-        );
+        const current = selectedSpecialistsRef.current;
+        if (current.has(spec)) {
+            current.delete(spec);
+        } else {
+            current.add(spec);
+        }
+    };
+
+    const [visits, setVisits] = useState<AppointmentSlotDTO[]>([]);
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (visits.length > 0) {
+            visitsListRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [visits]);
+
+    const handleSearch = async () => {
+        setLoading(true);
+        setError('');
+
+        const searchCriteria = searchInputRef.current?.value || '';
+        const dateCriteria = dateInputRef.current?.value || '';
+        const hasSpecialists = selectedSpecialistsRef.current.size > 0;
+
+        if (!searchCriteria && !dateCriteria && !hasSpecialists) {
+            setError('Proszę wypełnić przynajmniej jeden filtr: specjalizację, nazwę placówki lub datę.');
+            setLoading(false);
+            return; 
+        }
+
+        try {
+            const criteria = {
+                facilityNameOrSpecialization: searchCriteria || null,
+                date: dateCriteria ? new Date(dateCriteria).toISOString() : null,
+                specializationsClicked: Array.from(selectedSpecialistsRef.current),
+            };
+
+            const response = await fetch(`https://localhost:7061/api/appointment/search`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(criteria),
+            });
+
+            if (!response.ok) {
+                const err = await response.text();
+                setError(err);
+                setVisits([]);
+            } else {
+                const data = await response.json();
+                setVisits(data);
+            }
+        } catch {
+            setError('Błąd połączenia z serwerem.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -24,19 +85,19 @@ const Visits: React.FC = () => {
             <div className="content">
                 <div className="form-section">
                     <h2>Znajdź lekarza i umów wizytę</h2>
-
+                    {error && <span className="text-danger small mb-2">{error}</span>}
                     <input
                         type="text"
                         placeholder="Wpisz specjalizację lub nazwę placówki"
                         className="search-input"
+                        ref={searchInputRef}
                     />
 
                     <h3 className="date-label">Termin</h3>
                     <input
                         type="date"
                         className="date-input"
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
+                        ref={dateInputRef}
                     />
 
                     <div className="specializations-grid">
@@ -51,7 +112,7 @@ const Visits: React.FC = () => {
                         ))}
                     </div>
 
-                    <button className="show-doctors">Pokaż dostępnych lekarzy</button>
+                    <button className="show-doctors" onClick={handleSearch}>Pokaż dostępnych lekarzy</button>
                 </div>
 
                 <div className="image-section">
@@ -59,28 +120,24 @@ const Visits: React.FC = () => {
                 </div>
             </div>
 
-            <div className="visits-list">
-                <div className="visit-box">
-                    <p className="visit-date">15 sierpnia 2024, 10:00</p>
-                    <button className="book-button">Umów</button>
-                    <p className="doctor-name">dr med. Jan Kowalski</p>
-                    <p className="specialty">Kardiolog</p>
-                    <div className="clinic-location-row">
-                        <p className="clinic">Przychodnia "Biegunowa"</p>
-                        <p className="location">Lokalizacja</p>
+            <div className="visits-list" ref={visitsListRef}>
+                {loading && <p>Ładowanie wizyt...</p>}
+                {error && <p className="text-danger">{error}</p>}
+                {!loading && visits.length === 0 && <p>Brak wyników.</p>}
+                {visits.map((visit, index) => (
+                    <div className="visit-box" key={index}>
+                        <p className="visit-date">
+                            {new Date(visit.startTime).toLocaleString('pl-PL')}
+                        </p>
+                        <button className="book-button">Umów</button>
+                        <p className="doctor-name">{visit.doctorFullName}</p>
+                        <p className="specialty">{visit.specialization}</p>
+                        <div className="clinic-location-row">
+                            <p className="clinic">{visit.medicalFacilityName}</p>
+                            <p className="location">?Location?</p>
+                        </div>
                     </div>
-                </div>
-
-                <div className="visit-box">
-                    <p className="visit-date">25 września 2024, 10:00</p>
-                    <button className="book-button">Umów</button>
-                    <p className="doctor-name">dr med. Joanna Niksa</p>
-                    <p className="specialty">Internista</p>
-                    <div className="clinic-location-row">
-                        <p className="clinic">Przychodnia "Tęcza"</p>
-                        <p className="location">Lokalizacja</p>
-                    </div>
-                </div>
+                ))}
             </div>
 
             <div className="man-image">

@@ -134,8 +134,8 @@ namespace Medi.Server.Data
                         return workingDays.Select(day => new WorkingHours
                         {
                             DayOfWeek = day,
-                            StartTime = new TimeSpan(f.Random.Int(6, 9), f.Random.Int(0, 60), 0),
-                            EndTime = new TimeSpan(f.Random.Int(12, 18), f.Random.Int(0, 60), 0)
+                            StartTime = new TimeSpan(f.Random.Int(6, 9), f.PickRandom(0, 30), 0),
+                            EndTime = new TimeSpan(f.Random.Int(12, 18), f.PickRandom(0, 30), 0)
                         }).ToList();
                     })
                     .Generate(120);
