@@ -170,6 +170,10 @@
     font-size: 0.95rem;
     color: #444;
     margin: 0;
+    cursor: pointer
+}
+.location:hover {
+    text-decoration: underline;
 }
 
 .book-button {

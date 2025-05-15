@@ -3,11 +3,21 @@ import '../styles/Visits.css';
 import doctorImg from '../assets/doctor.png';
 import manImg from '../assets/man.png';
 import { AppointmentSlotDTO } from '../types/AppointmentSlotDTO';
+import Map from '../components/Map';
+import Modal from '../components/Modal';
 
 const Visits: React.FC = () => {
     const [selectedSpecialists, setSelectedSpecialists] = useState<string[]>([]);
   //  const [selectedDate, setSelectedDate] = useState<string>('');
     const visitsListRef = useRef<HTMLDivElement>(null);
+    const [showMap, setShowMap] = useState(false);
+    const [mapAddress, setMapAddress] = useState('');
+
+    const openMap = (address: string) => {
+        setMapAddress(address);
+        setShowMap(true);
+    };
+    const closeMap = () => setShowMap(false);
 
     const allSpecialists = [
         'Internista', 'Kardiolog', 'Dermatolog',
@@ -134,15 +144,25 @@ const Visits: React.FC = () => {
                         <p className="specialty">{visit.specialization}</p>
                         <div className="clinic-location-row">
                             <p className="clinic">{visit.medicalFacilityName}</p>
-                            <p className="location">?Location?</p>
+                            <p className="location"               
+                            onClick={() => openMap("Jaworzyńska 13 59-220 Legnica")}
+                            >Lokalizacja</p>
                         </div>
                     </div>
+
                 ))}
+
             </div>
 
             <div className="man-image">
                 <img src={manImg} alt="Pacjent" />
             </div>
+
+            {showMap && (
+                <Modal onClose={closeMap}>
+                    <Map address={mapAddress} />
+                </Modal>
+            )}
         </div>
     );
 };
