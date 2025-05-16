@@ -12,6 +12,7 @@ import './styles/index.css';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Planned from './pages/Planned';
 import Register from './pages/Register';
 import Visits from './pages/Visits';
 import PatientProfile from './pages/PatientProfile'; 
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/planned" element={<Planned />} />
                     <Route path="/visits" element={<ProtectedRoute><Visits /></ProtectedRoute>} />
                     <Route path="/profil-pacjenta" element={<ProtectedRoute><PatientProfile /></ProtectedRoute>} /> 
                 </Routes>
