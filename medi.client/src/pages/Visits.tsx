@@ -5,6 +5,8 @@ import manImg from '../assets/man.png';
 import { AppointmentSlotDTO } from '../types/AppointmentSlotDTO';
 import Map from '../components/Map';
 import Modal from '../components/Modal';
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 const Visits: React.FC = () => {
     const [selectedSpecialists, setSelectedSpecialists] = useState<string[]>([]);
@@ -49,7 +51,7 @@ const Visits: React.FC = () => {
     }, [visits]);
     const handleLocationClick = async (medicalFacilityId: number) => {
         try {
-            const response = await fetch(`https://localhost:7061/api/medicalFacilities/simple-address/${medicalFacilityId}`);
+            const response = await fetch(`${apiUrl}/api/medicalFacilities/simple-address/${medicalFacilityId}`);
             if (!response.ok) {
                 console.error("Nie udało się pobrać adresu");
                 return;
@@ -81,8 +83,8 @@ const Visits: React.FC = () => {
                 date: dateCriteria ? new Date(dateCriteria).toISOString() : null,
                 specializationsClicked: Array.from(selectedSpecialistsRef.current),
             };
-
-            const response = await fetch(`https://localhost:7061/api/appointment/search`, {
+            
+            const response = await fetch(`${apiUrl}/api/appointment/search`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(criteria),

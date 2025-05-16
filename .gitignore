@@ -26,7 +26,7 @@ packages/
 project.lock.json
 
 # Secret keys & konfiguracje
-appsettings*.json
+appsettings.Development.json
 secrets.json
 
 # --- 🔹 FRONTEND (React) ---
