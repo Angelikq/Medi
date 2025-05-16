@@ -47,7 +47,20 @@ const Visits: React.FC = () => {
             visitsListRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }, [visits]);
+    const handleLocationClick = async (medicalFacilityId: number) => {
+        try {
+            const response = await fetch(`https://localhost:7061/api/medicalFacilities/simple-address/${medicalFacilityId}`);
+            if (!response.ok) {
+                console.error("Nie udało się pobrać adresu");
+                return;
+            }
 
+            const address = await response.text();
+            openMap(address);
+        } catch (error) {
+            console.error("Błąd podczas pobierania adresu", error);
+        }
+    };
     const handleSearch = async () => {
         setLoading(true);
         setError('');
@@ -145,7 +158,7 @@ const Visits: React.FC = () => {
                         <div className="clinic-location-row">
                             <p className="clinic">{visit.medicalFacilityName}</p>
                             <p className="location"               
-                            onClick={() => openMap("Jaworzyńska 13 59-220 Legnica")}
+                                onClick={() => handleLocationClick(visit.medicalFacilityId)}
                             >Lokalizacja</p>
                         </div>
                     </div>
@@ -159,7 +172,7 @@ const Visits: React.FC = () => {
             </div>
 
             {showMap && (
-                <Modal onClose={closeMap}>
+                <Modal onClose={closeMap} modalTitle="Lokalizacja">
                     <Map address={mapAddress} />
                 </Modal>
             )}

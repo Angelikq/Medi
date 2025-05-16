@@ -3,9 +3,10 @@ import React from 'react';
 type ModalProps = {
     onClose: () => void;
     children: React.ReactNode; 
+    modalTitle: string;
 };
 
-const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ modalTitle ,onClose, children }) => {
     return (
         <div
             className="modal fade show d-block"
@@ -23,7 +24,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
             >
                 <div className="modal-content d-flex flex-column" style={{ height: '100%' }}>
                     <div className="modal-header">
-                        <h5 className="modal-title">Lokalizacja</h5>
+                        <h5 className="modal-title">{modalTitle}</h5>
                         <button
                             type="button"
                             className="btn-close"
@@ -31,13 +32,8 @@ const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
                             onClick={onClose}
                         />
                     </div>
-                    <div className="modal-body flex-grow-1 p-0">
+                    <div className="modal-body flex-grow-1 pb-5">
                         {children}
-                    </div>
-                    <div className="modal-footer">
-                        <button className="btn btn-secondary" onClick={onClose}>
-                            Zamknij
-                        </button>
                     </div>
                 </div>
             </div>
