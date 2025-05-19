@@ -116,4 +116,4 @@ const Przyklad: React.FC = () => (
     </>
 )
 
-export default Planned;
+export default Przyklad;
