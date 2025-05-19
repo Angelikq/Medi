@@ -1,137 +1,103 @@
 body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #fff;
-    margin: 0;
-    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: #f6f6f6;
+    padding: 20px;
 }
 
-.navbar {
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    padding: 1rem 2rem;
+.card {
+    background-color: #f8fdfa;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-    .navbar a {
-        color: #000;
-        text-decoration: none;
-        margin-left: 20px;
-        font-weight: 500;
-    }
-
-.main-flex-container {
-    display: flex;
-    flex-wrap: wrap;
-    min-height: 88vh;
-    padding: 2rem;
-    background-color: #FFF;
+.date-time {
+    font-weight: 500;
 }
 
-.left-section {
-    flex: 1 1 50%;
+.status-buttons {
     display: flex;
-    justify-content: center;
     align-items: center;
+    gap: 10px;
 }
 
-.right-section {
-    flex: 1 1 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
+.status {
+    color: #3a913f;
+    font-weight: 600;
 }
 
-.form-box {
-    border-radius: 30px;
-    padding: 1rem 2rem;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    line-height: 1.8;
-}
-
-    .form-box h2 {
-        font-size: 2rem;
-        font-weight: 600;
-        color: #212B27;
-        margin-bottom: 0.8rem;
-        margin-top: 0.5rem;
-    }
-
-.visit-card {
-    background-color: #f6fbf9;
-    border: 1px solid #59878C;
-    border-radius: 30px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 100%;
-}
-
-    .visit-card p {
-        margin: 10px 0;
-    }
-
-    .visit-card a {
-        text-decoration: none;
-        color: #3F93AE;
-        display: block;
-    }
-
-.edit-btn {
-    background-color: #8be1ee;
-    border: none;
-    padding: 1rem 1.5rem;
-    border-radius: 30px;
-    color: #FFF;
-    font-weight: 700;
-    margin-top: 1rem;
+.cancel-btn {
+    background: none;
+    border: 1px solid #a94442;
+    color: #a94442;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 500;
     cursor: pointer;
 }
 
+.card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.name {
+    font-weight: 600;
+}
+
+.specialty, .clinic {
+    color: #333;
+    font-size: 14px;
+}
+
+.link {
+    color: #407080;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.line {
+    height: 1px;
+    background-color: #ddd;
+}
+
+.main-flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.left-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
 .register-image {
-    max-height: 350px;
-    width: auto;
-}
-
-.status-zaplanowana {
-    color: #82C19A;
-    font-weight: bold;
-}
-
-.status-odwolana {
-    color: #D06079;
-    font-weight: bold;
-}
-
-.status-zrealizowana {
-    color: #419488;
-    font-weight: bold;
-}
-
-@media (max-width: 768px) {
-    .main-flex-container {
-        flex-direction: column;
-        padding: 1rem;
-    }
-
-    .left-section,
-    .right-section {
-        flex: 1 1 100%;
-        justify-content: center;
-    }
-
-    .register-image {
-        max-width: 80%;
-        height: auto;
-    }
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
 }
