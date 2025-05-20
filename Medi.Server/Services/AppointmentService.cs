@@ -26,9 +26,12 @@ namespace Medi.Server.Services
 
             if (!string.IsNullOrEmpty(criteria.DoctorNameOrSpecialization))
             {
+                var search = criteria.DoctorNameOrSpecialization.ToLower();
+
                 query = query.Where(slot =>
-                    slot.Doctor.Specialization.Name.Contains(criteria.DoctorNameOrSpecialization) ||
-                    slot.Doctor.LastName.Contains(criteria.DoctorNameOrSpecialization));
+                    (slot.Doctor.FirstName + " " + slot.Doctor.LastName).ToLower().Contains(search) ||
+                    slot.Doctor.LastName.ToLower().Contains(search) ||
+                    slot.Doctor.MedicalFacility.Name.ToLower().Contains(search));
             }
             if (!string.IsNullOrEmpty(criteria.Specialization))
             {
@@ -69,6 +72,26 @@ namespace Medi.Server.Services
         {
             throw new NotImplementedException();
 
+        }
+        public async Task<List<string>> GetDoctorAndSpecializationSuggestionsAsync(string query)
+        {
+            query = query.ToLower();
+            var suggestionsDoctors = await _context.Doctors
+                .Where(d => d.FirstName.Contains(query) || d.LastName.Contains(query))
+                .Select(d => $"{d.FirstName} {d.LastName}")
+                .ToListAsync();
+            var specializationSuggestions = await _context.Specializations
+                .Where(s => s.Name.Contains(query))
+                .Select(s => s.Name)
+                .ToListAsync();
+
+            var result = suggestionsDoctors.Union(specializationSuggestions);
+            if (result.Any())
+            {
+
+                return result.Distinct().OrderBy(name => name).ToList();
+            }
+            return new List<string>();
         }
     }
 }

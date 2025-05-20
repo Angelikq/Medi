@@ -18,7 +18,10 @@ const Visits: React.FC = () => {
     const [visits, setVisits] = useState<AppointmentSlotDTO[]>([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+    const [query, setQuery] = useState('');
+    const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
     useEffect(() => {
         if (visits.length > 0) {
@@ -79,7 +82,22 @@ const Visits: React.FC = () => {
             setSpecialization("")
         }
     };
+    const fetchSuggestions = async (input: string) => {
+        if (input.length < 3) {
+            setSuggestions([]);
+            return;
+        }
 
+        try {
+            const res = await fetch(`${apiUrl}/api/appointment/suggestions?query=${encodeURIComponent(input)}`);
+            if (res.ok) {
+                const data = await res.json();
+                setSuggestions(data);
+            }
+        } catch (e) {
+            console.error("Błąd pobierania sugestii", e);
+        }
+    };
     const handleLocationClick = async (medicalFacilityId: number) => {
         try {
             const response = await fetch(`${apiUrl}/api/medicalFacilities/simple-address/${medicalFacilityId}`);
@@ -108,14 +126,67 @@ const Visits: React.FC = () => {
                 <div className="form-section">
                     <h2>Znajdź lekarza i umów wizytę</h2>
                     {error && <span className="text-danger small mb-2">{error}</span>}
-                    <input
-                        type="text"
-                        placeholder="Wpisz specjalizację lub nazwisko lekarza"
-                        className="search-input"
-                        ref={searchInputRef}
-                    />
-
-                    <h3 className="date-label">Termin</h3>
+                    <div className="position-relative">
+                        <input
+                            type="text"
+                            placeholder="Wpisz specjalizację lub nazwisko lekarza"
+                            className="search-input"
+                            value={query}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                setQuery(val);
+                                fetchSuggestions(val);
+                                setActiveSuggestionIndex(0);
+                                setShowSuggestions(true);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === 'ArrowDown') {
+                                    setActiveSuggestionIndex((prev) =>
+                                        prev < suggestions.length - 1 ? prev + 1 : prev
+                                    );
+                                } else if (e.key === 'ArrowUp') {
+                                    setActiveSuggestionIndex((prev) =>
+                                        prev > 0 ? prev - 1 : prev
+                                    );
+                                } else if (e.key === 'Enter') {
+                                    if (activeSuggestionIndex >= 0) {
+                                        const selected = suggestions[activeSuggestionIndex];
+                                        setQuery(selected);
+                                        searchInputRef.current!.value = selected;
+                                        setSuggestions([]);
+                                        setShowSuggestions(false);
+                                    }
+                                }
+                            }}
+                            onBlur={() => setTimeout(() => {
+                                setShowSuggestions(false);
+                            }, 200)}
+                            ref={searchInputRef}
+                        />
+                        {showSuggestions && suggestions.length > 0 && (
+                            <ul className="list-group position-absolute w-100 z-3" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                {suggestions.map((item, index) => (
+                                    <li
+                                        key={index}
+                                        className={`list-group-item list-group-item-action}`}
+                                        style={{
+                                            backgroundColor: index === activeSuggestionIndex ? '#D7F0F3' : 'white',
+                                        }}
+                                        role="button"
+                                        onClick={() => {
+                                            setQuery(item);
+                                            searchInputRef.current!.value = item;
+                                            setSuggestions([]);
+                                            setShowSuggestions(false);
+                                        }}
+                                    >
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                    <h3 className="date-label mt-3">Termin</h3>
                     <input
                         type="date"
                         className="date-input"

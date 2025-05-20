@@ -7,6 +7,7 @@ namespace Medi.Server.Interfaces
     {
         Task<List<AppointmentSlotDTO>> SearchAppointmentsAsync(AppointmentSearchCriteria criteria);
         Task<IEnumerable<AppointmentSlot>> GetDoctorScheduleAsync(int doctorId, DateTime date);
+        Task<List<string>>GetDoctorAndSpecializationSuggestionsAsync(string query);
 
     }
 }

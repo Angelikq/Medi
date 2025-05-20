@@ -50,7 +50,15 @@ namespace Medi.Server.Controllers
                 return BadRequest($"Error occurred: {ex.Message}");
             }
         }
-      
-        
+        [HttpGet("suggestions")]
+        public async Task<IActionResult> GetDoctorAndSpecializationSuggestions([FromQuery]string query)
+        {
+            if (string.IsNullOrWhiteSpace(query) || query.Length < 3)
+                return BadRequest("Wpisz co najmniej 3 znaki.");
+
+            var suggestions = await _appointmentService.GetDoctorAndSpecializationSuggestionsAsync(query);
+            return Ok(suggestions);
+        }
+
     }
 }
