@@ -3,7 +3,6 @@ using Medi.Server.Interfaces;
 using Medi.Server.Models.DTOs;
 using Medi.Server.Models.Enities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 namespace Medi.Server.Services
 {
     public class AppointmentService : IAppointmentService
@@ -22,7 +21,7 @@ namespace Medi.Server.Services
                 .ThenInclude(d => d.Specialization)
                 .Include(s => s.Doctor)
                 .ThenInclude(d => d.MedicalFacility)
-                .Where(slot => slot.Appointment == null)
+                .Where(slot => slot.Appointment == null && slot.StartTime > DateTime.Now)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(criteria.FacilityNameOrSpecialization))
@@ -31,9 +30,9 @@ namespace Medi.Server.Services
                     slot.Doctor.Specialization.Name.Contains(criteria.FacilityNameOrSpecialization) ||
                     slot.Doctor.MedicalFacility.Name.Contains(criteria.FacilityNameOrSpecialization));
             }
-            if (criteria.SpecializationsClicked != null && criteria.SpecializationsClicked.Any())
+            if (!string.IsNullOrEmpty(criteria.Specialization))
             {
-                query = query.Where(slot => criteria.SpecializationsClicked.Contains(slot.Doctor.Specialization.Name));
+                query = query.Where(slot => slot.Doctor.Specialization.Name.Contains(criteria.Specialization));
             }
 
             if (criteria.Date.HasValue)
