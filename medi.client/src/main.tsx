@@ -30,7 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                     <Route path="/register" element={<Register />} />
                     <Route path="/planned" element={<Planned />} />
                     <Route path="/visits" element={<ProtectedRoute><Visits /></ProtectedRoute>} />
-                    <Route path="/profil-pacjenta" element={<ProtectedRoute><PatientProfile /></ProtectedRoute>} /> 
+                    <Route path="/profile" element={<ProtectedRoute><PatientProfile /></ProtectedRoute>} /> 
                 </Routes>
             </BrowserRouter>
         </AuthProvider>

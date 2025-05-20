@@ -46,13 +46,13 @@ const Navbar: React.FC = () => {
                             ) : (
                                 <>
                                     <li className="nav-item">
-                                        <Link className="nav-link text-dark fw-medium" to="/profil-pacjenta">Profil pacjenta</Link>
+                                        <Link className="nav-link text-dark fw-medium" to="/profile">Profil pacjenta</Link>
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link text-dark fw-medium" to="/visits">Moje wizyty</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link text-dark fw-medium" to="/kontakt">Kontakt</Link>
+                                        <Link className="nav-link text-dark fw-medium" to="/contact">Kontakt</Link>
                                     </li>
                                     <li className="nav-item">
                                         <Link onClick={logout} className="nav-link text-dark fw-medium" to="/">Wyloguj się</Link>
@@ -83,13 +83,13 @@ const Navbar: React.FC = () => {
                         ) : (
                             <>
                                 <li className="nav-item">
-                                        <Link className="nav-link" to="/profil-pacjenta" data-bs-dismiss="offcanvas" onClick={() => window.location.href = '/profil-pacjenta'}>Profil pacjenta</Link>
+                                        <Link className="nav-link" to="/profile" data-bs-dismiss="offcanvas" onClick={() => window.location.href = '/profile'}>Profil pacjenta</Link>
                                 </li>
                                 <li className="nav-item">
                                         <Link className="nav-link" to="/visits" data-bs-dismiss="offcanvas" onClick={() => window.location.href = '/visits'}>Moje wizyty</Link>
                                 </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/kontakt" data-bs-dismiss="offcanvas" onClick={() => window.location.href = '/kontakt'}>Kontakt</Link>
+                                        <Link className="nav-link" to="/contact" data-bs-dismiss="offcanvas" onClick={() => window.location.href = '/contact'}>Kontakt</Link>
                                 </li>
                                 <li className="nav-item">
                                         <Link className="nav-link" to="/" onClick={logout} data-bs-dismiss="offcanvas">Wyloguj się</Link>
