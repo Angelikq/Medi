@@ -54,7 +54,7 @@ const Visits: React.FC = () => {
                 {
                     specialization: specialization
                 } : {
-                facilityNameOrSpecialization: searchCriteria || null,
+                doctorNameOrSpecialization: searchCriteria || null,
                 date: dateCriteria ? new Date(dateCriteria).toISOString() : null,
             };
             
@@ -110,7 +110,7 @@ const Visits: React.FC = () => {
                     {error && <span className="text-danger small mb-2">{error}</span>}
                     <input
                         type="text"
-                        placeholder="Wpisz specjalizację lub nazwę placówki"
+                        placeholder="Wpisz specjalizację lub nazwisko lekarza"
                         className="search-input"
                         ref={searchInputRef}
                     />

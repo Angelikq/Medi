@@ -24,11 +24,11 @@ namespace Medi.Server.Services
                 .Where(slot => slot.Appointment == null && slot.StartTime > DateTime.Now)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(criteria.FacilityNameOrSpecialization))
+            if (!string.IsNullOrEmpty(criteria.DoctorNameOrSpecialization))
             {
                 query = query.Where(slot =>
-                    slot.Doctor.Specialization.Name.Contains(criteria.FacilityNameOrSpecialization) ||
-                    slot.Doctor.MedicalFacility.Name.Contains(criteria.FacilityNameOrSpecialization));
+                    slot.Doctor.Specialization.Name.Contains(criteria.DoctorNameOrSpecialization) ||
+                    slot.Doctor.LastName.Contains(criteria.DoctorNameOrSpecialization));
             }
             if (!string.IsNullOrEmpty(criteria.Specialization))
             {
